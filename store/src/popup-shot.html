@@ -1,0 +1,105 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="../../popup.css">
+<style>
+  /* popup.css owns <body>, so the backdrop and layout are restated here. */
+  body { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 78px;
+         width: 1280px; height: 800px; padding: 0 92px; background: var(--green-dark);
+         background-image: radial-gradient(circle at 16% 12%, #128a68 0%, transparent 55%),
+                           radial-gradient(circle at 90% 90%, #0a4f3e 0%, transparent 60%); }
+  .copy h1 { color: #fff; font: 500 50px/1.08 Georgia, serif; letter-spacing: -0.015em; }
+  .copy p { margin-top: 20px; max-width: 30ch; color: var(--mint); font: 18px/1.5 Arial, sans-serif; }
+  .copy ul { margin: 30px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+  .copy li { position: relative; padding-left: 27px; color: #eaf6f1; font: 16px/1.4 Arial, sans-serif; }
+  .copy li::before { position: absolute; left: 0; top: -1px; content: '\2713'; color: var(--mint); font-size: 17px; font-weight: bold; }
+  /* zoom (not transform) so the scaled popup still occupies correct layout space */
+  .frame { zoom: .70; width: 372px; background: var(--paper); border-radius: 18px; overflow: hidden;
+            box-shadow: 0 34px 80px rgba(0,0,0,.46), 0 0 0 1.4px rgba(255,255,255,.10); }
+</style>
+<div class="copy">
+  <h1>Your chats,<br>as plain text</h1>
+  <p>Pick the conversations you want and export them to .txt files, ready to feed to an AI.</p>
+  <ul>
+    <li>One file per chat, or one combined file</li>
+    <li>Full history, not just what&rsquo;s on screen</li>
+    <li>No server, no analytics, no network calls</li>
+  </ul>
+</div>
+<div class="frame">
+    <main class="popup">
+      <header class="header">
+        <div class="mark">WA</div>
+        <div>
+          <p class="eyebrow">Local export tool</p>
+          <h1>Chat downloader</h1>
+        </div>
+      </header>
+
+      <section class="notice">
+        <strong>Keep the WhatsApp Web tab open and in front</strong>
+        <span>Chats are read from the page itself, so nothing leaves your machine. Opening a chat marks it as read.</span>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Chats</span>
+          <button id="scan" class="button button-quiet button-small">Scan chats</button>
+        </div>
+        <input id="filter" class="input" type="search" placeholder="Filter chats" disabled>
+        <div id="chat-list" class="chat-list" aria-live="polite">
+          <p class="empty">Scan to pick chats, or export everything without scanning.</p>
+        </div>
+        <div class="panel-foot">
+          <label class="check"><input id="select-all" type="checkbox" disabled> Select all</label>
+          <span id="selection-count" class="muted">0 selected</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><span class="panel-title">Options</span></div>
+        <div class="grid">
+          <div>
+            <label class="field-label" for="speed">Speed</label>
+            <select id="speed" class="select">
+              <option value="350">Fast</option>
+              <option value="700" selected>Balanced</option>
+              <option value="1200">Careful</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="since">History</label>
+            <select id="since" class="select">
+              <option value="0" selected>Everything</option>
+              <option value="30">Last 30 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="365">Last year</option>
+            </select>
+          </div>
+        </div>
+        <label class="field-label" for="max-messages">Max messages per chat (0 = no limit)</label>
+        <input id="max-messages" class="input" type="number" min="0" step="100" value="0">
+        <label class="check"><input id="per-chat" type="checkbox" checked> One .txt per chat</label>
+        <label class="check"><input id="combined" type="checkbox"> Also save one combined .txt</label>
+        <label class="check"><input id="json" type="checkbox"> Also save .json per chat</label>
+      </section>
+
+      <div class="actions">
+        <button id="start" class="button button-primary">Download chats</button>
+        <button id="stop" class="button button-quiet" disabled>Stop</button>
+      </div>
+
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-track"><div id="progress" class="progress"></div></div>
+        <div class="status-row"><span id="status">Ready</span><span id="count">0 / 0</span></div>
+      </div>
+
+      <p id="error" class="error" hidden></p>
+      <details class="log-wrap">
+        <summary>Activity log</summary>
+        <div id="log" class="log"></div>
+      </details>
+      <p class="footnote">Files land in your Downloads folder under <code>whatsapp-export/</code>.</p>
+    </main>
+    
+  </div>

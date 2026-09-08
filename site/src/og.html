@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap');
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1200px; height: 630px; display: flex; flex-direction: column; justify-content: center;
+    padding: 0 84px; background: #0c1a16;
+    background-image: radial-gradient(circle at 12% 8%, #12523f 0%, transparent 58%),
+                      radial-gradient(circle at 92% 96%, #0a3b2e 0%, transparent 62%);
+    color: #f8fbf9; font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .top { display: flex; align-items: center; gap: 16px; }
+  .top svg { width: 52px; height: 52px; }
+  .top span { font: 500 25px/1 "Newsreader", Georgia, serif; color: #c6eadb; }
+  h1 { margin-top: 40px; font: 600 82px/1.04 "Newsreader", Georgia, serif; letter-spacing: -0.02em; max-width: 17ch; }
+  p { margin-top: 26px; max-width: 40ch; font-size: 26px; line-height: 1.45; color: #a8ccbe; }
+  .chips { display: flex; gap: 12px; margin-top: 42px; }
+  .chip { padding: 10px 20px; border: 1px solid rgba(198,234,219,.34); border-radius: 999px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 16px; color: #c6eadb; }
+</style>
+<div class="top">
+  <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="#c6eadb"/><path d="M19 5.5H5a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 5 15.5h1.2v3l3.4-3h9.4a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 19 5.5Z" fill="#0c1a16"/></svg>
+  <span>Chat Exporter for WhatsApp Web</span>
+</div>
+<h1>Export your WhatsApp chats to text files</h1>
+<p>Full history, straight to .txt on your own computer. Ready for AI.</p>
+<div class="chips"><span class="chip">No servers</span><span class="chip">No analytics</span><span class="chip">Open source</span></div>

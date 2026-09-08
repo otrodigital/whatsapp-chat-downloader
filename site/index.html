@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Export WhatsApp Chats to Text Files | Chat Exporter</title>
+<meta name="description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. Full history, no servers, no analytics. Ready for AI.">
+<link rel="canonical" href="https://whatsapp-chats-downloader.otro.digital/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#0f7c5f">
+<meta name="author" content="OTRO Digital">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chat Exporter for WhatsApp Web">
+<meta property="og:locale" content="en">
+<meta property="og:url" content="https://whatsapp-chats-downloader.otro.digital/">
+<meta property="og:title" content="Export WhatsApp Chats to Text Files">
+<meta property="og:description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. Full history, no servers, no analytics.">
+<meta property="og:image" content="https://whatsapp-chats-downloader.otro.digital/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chat Exporter for WhatsApp Web - export your conversations to plain text files.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Export WhatsApp Chats to Text Files">
+<meta name="twitter:description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. No servers, no analytics.">
+<meta name="twitter:image" content="https://whatsapp-chats-downloader.otro.digital/og-image.png">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f8fbf9;
+  --surface: #ffffff;
+  --ink: #18342e;
+  --muted: #6d7c77;
+  --line: #dce6e1;
+  --mint: #c6eadb;
+  --mint-soft: #eaf6f1;
+  --green: #0f7c5f;
+  --green-dark: #075b47;
+  --coral: #e47c62;
+  --coral-ink: #a84736;
+  --on-accent: #ffffff;
+  --on-mint: #0b2c22;
+  --code-bg: #0d211c;
+  --code-ink: #dcefe7;
+  --code-dim: #7fa697;
+
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --measure: 66ch;
+  --gutter: clamp(20px, 5vw, 48px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0c1a16;
+    --surface: #12251f;
+    --ink: #e6f1ec;
+    --muted: #93aca3;
+    --line: #21382f;
+    --mint: #4e9c80;
+    --mint-soft: #173028;
+    --green: #4bbf95;
+    --green-dark: #7ed7b3;
+    --coral: #e08a72;
+    --coral-ink: #f0a48e;
+    --on-accent: #06231b;
+    --on-mint: #06231b;
+    --code-bg: #081512;
+    --code-ink: #d5eae1;
+    --code-dim: #6f9184;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0c1a16;
+  --surface: #12251f;
+  --ink: #e6f1ec;
+  --muted: #93aca3;
+  --line: #21382f;
+  --mint: #4e9c80;
+  --mint-soft: #173028;
+  --green: #4bbf95;
+  --green-dark: #7ed7b3;
+  --coral: #e08a72;
+  --coral-ink: #f0a48e;
+  --on-accent: #06231b;
+  --on-mint: #06231b;
+  --code-bg: #081512;
+  --code-ink: #d5eae1;
+  --code-dim: #6f9184;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(38px, 6.4vw, 66px); letter-spacing: -0.015em; }
+h2 { font-size: clamp(27px, 3.6vw, 38px); letter-spacing: -0.01em; }
+h3 { font-size: 19px; letter-spacing: -0.005em; }
+p { margin: 0; }
+a { color: var(--green-dark); text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible, .btn:focus-visible {
+  outline: 2px solid var(--green); outline-offset: 3px; border-radius: 3px;
+}
+code, pre, .mono { font-family: var(--mono); }
+
+/* Monospace eyebrow: the page's recurring structural marker. */
+.eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.wrap { width: 100%; max-width: 1080px; margin-inline: auto; padding-inline: var(--gutter); }
+.band { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--line); }
+.band--tint { background: var(--mint-soft); }
+.prose { max-width: var(--measure); }
+.prose p + p { margin-top: 16px; }
+.lede { font-size: clamp(18px, 2.1vw, 21px); color: var(--muted); line-height: 1.55; }
+
+/* --- masthead ---------------------------------------------------------- */
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 22px; }
+.brand { display: flex; align-items: center; gap: 11px; font-family: var(--display); font-size: 17px; color: var(--ink); text-decoration: none; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.masthead nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); font-size: 14px; }
+.masthead nav a { color: var(--muted); text-decoration: none; }
+.masthead nav a:hover { color: var(--ink); }
+@media (max-width: 640px) { .masthead nav a.is-optional { display: none; } }
+
+/* --- hero -------------------------------------------------------------- */
+.hero { padding-block: clamp(40px, 7vw, 76px) clamp(52px, 8vw, 92px); }
+.hero h1 { max-width: 15ch; }
+.hero .lede { max-width: 52ch; margin-top: 22px; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 32px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 22px; border-radius: 8px;
+  font: 600 15px/1 var(--sans); text-decoration: none;
+}
+.btn--primary { background: var(--green); color: var(--on-accent); }
+.btn--primary:hover { background: var(--green-dark); color: var(--on-accent); }
+.btn--ghost { border: 1px solid var(--line); color: var(--ink); background: var(--surface); }
+.btn--ghost:hover { border-color: var(--green); }
+.btn svg { width: 17px; height: 17px; }
+.cta-note { font-size: 13px; color: var(--muted); }
+
+/* --- the transformation: chat bubbles become a text file --------------- */
+.transform {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: clamp(14px, 2.4vw, 26px);
+  margin-top: clamp(40px, 6vw, 64px);
+}
+@media (max-width: 800px) { .transform { grid-template-columns: 1fr; } }
+.panel { margin: 0; display: flex; flex-direction: column; min-width: 0; }
+.panel figcaption {
+  margin-bottom: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.bubbles {
+  flex: 1; display: flex; flex-direction: column; gap: 10px; justify-content: center;
+  padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface);
+}
+.bubble { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.45; }
+.bubble--in { align-self: flex-start; background: var(--mint-soft); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.bubble--out { align-self: flex-end; background: var(--mint); color: var(--on-mint); border-bottom-right-radius: 4px; }
+.bubble .who { display: block; font-size: 11px; font-weight: 700; color: var(--green-dark); }
+.arrow {
+  display: grid; place-items: center; color: var(--green);
+  font-family: var(--mono); font-size: 22px; padding-top: 26px;
+}
+@media (max-width: 800px) { .arrow { padding: 0; transform: rotate(90deg); } }
+.filecard {
+  flex: 1; margin: 0; padding: 20px 22px; border-radius: 14px;
+  background: var(--code-bg); color: var(--code-ink);
+  font-family: var(--mono); font-size: 13px; line-height: 1.75;
+  overflow-x: auto;
+}
+.filecard .t { color: var(--code-dim); }
+.filecard .n { color: #8fd9bb; }
+
+/* --- feature list ------------------------------------------------------ */
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px 40px; margin-top: 40px; }
+.feature h3 { margin-bottom: 7px; }
+.feature p { color: var(--muted); font-size: 15px; }
+.feature .tag { display: block; margin-bottom: 9px; font-family: var(--mono); font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--green); }
+
+/* --- numbered steps (a real sequence, so numbers carry meaning) -------- */
+.steps { counter-reset: step; display: grid; gap: 26px; margin-top: 38px; max-width: var(--measure); }
+.step { counter-increment: step; display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+.step::before {
+  content: counter(step); display: grid; place-items: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--mint); color: var(--on-mint);
+  font: 600 14px/1 var(--mono);
+}
+.step h3 { margin-bottom: 5px; }
+.step p { color: var(--muted); font-size: 15px; }
+
+/* --- code sample ------------------------------------------------------- */
+.sample {
+  margin: 34px 0 0; padding: 24px clamp(18px, 3vw, 28px); border-radius: 14px;
+  background: var(--code-bg); color: var(--code-ink);
+  font-family: var(--mono); font-size: 13px; line-height: 1.8;
+  overflow-x: auto; tab-size: 2;
+}
+.sample .t { color: var(--code-dim); }
+.sample .n { color: #8fd9bb; }
+.sample .s { color: #f0b49c; }
+
+/* --- privacy ----------------------------------------------------------- */
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 22px; margin-top: 36px; }
+.claim { padding-top: 16px; border-top: 2px solid var(--green); }
+.claim strong { display: block; font-family: var(--display); font-size: 21px; font-weight: 600; }
+.claim span { display: block; margin-top: 5px; color: var(--muted); font-size: 14px; }
+
+/* --- limits (the one place coral is spent) ----------------------------- */
+.limits { max-width: var(--measure); margin-top: 34px; padding-left: 22px; border-left: 3px solid var(--coral); display: grid; gap: 18px; }
+.limits h3 { font-family: var(--sans); font-size: 15px; font-weight: 700; }
+.limits p { margin-top: 4px; color: var(--muted); font-size: 15px; }
+
+/* --- faq --------------------------------------------------------------- */
+.faq { max-width: var(--measure); margin-top: 34px; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 18px 0; cursor: pointer; list-style: none;
+  font-family: var(--display); font-size: 19px; font-weight: 600;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--mono); font-size: 18px; color: var(--green); flex: none; }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details > p { padding: 0 0 20px; max-width: 60ch; color: var(--muted); font-size: 15.5px; }
+.faq details > p + p { margin-top: -6px; padding-top: 0; }
+
+/* --- footer ------------------------------------------------------------ */
+.foot { border-top: 1px solid var(--line); padding-block: 44px 56px; font-size: 14px; color: var(--muted); }
+.foot-top { display: flex; flex-wrap: wrap; gap: 20px 40px; justify-content: space-between; align-items: baseline; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.foot a { color: var(--ink); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+.foot .fine { margin-top: 28px; max-width: 62ch; font-size: 12.5px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header class="wrap masthead">
+  <a class="brand" href="/" aria-label="Chat Exporter for WhatsApp Web, home">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#0f7c5f"/><path d="M19 5.5H5a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 5 15.5h1.2v3l3.4-3h9.4a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 19 5.5Z" fill="#c6eadb"/></svg>
+    Chat Exporter
+  </a>
+  <nav>
+    <a href="#how" class="is-optional">How it works</a>
+    <a href="#format" class="is-optional">Output</a>
+    <a href="#install">Install</a>
+    <a href="#faq" class="is-optional">FAQ</a>
+    <a href="https://github.com/otrodigital/whatsapp-chats-downloader" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <p class="eyebrow">Chrome extension &middot; Free &amp; open source</p>
+    <h1>Export your WhatsApp chats to text files</h1>
+    <p class="lede">Chat Exporter saves conversations from WhatsApp Web as plain <code>.txt</code> files on your own computer &mdash; whole histories, not just what fits on screen. Formatted so you can hand them straight to an AI.</p>
+
+    <div class="cta">
+      <a class="btn btn--primary" href="https://github.com/otrodigital/whatsapp-chats-downloader" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.01.36-2.53-.49-2.7-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        Get it on GitHub
+      </a>
+      <a class="btn btn--ghost" href="#how">See how it works</a>
+      <span class="cta-note">Chrome 102+ &middot; No account &middot; No network requests</span>
+    </div>
+
+    <div class="transform">
+      <figure class="panel">
+        <figcaption>A conversation in WhatsApp Web</figcaption>
+        <div class="bubbles">
+          <p class="bubble bubble--in"><span class="who">Ada Lovelace</span>Are we still on for Thursday?</p>
+          <p class="bubble bubble--out">Yes &mdash; 10:30 at the studio</p>
+          <p class="bubble bubble--in"><span class="who">Ada Lovelace</span>Perfect, sending the brief over now</p>
+        </div>
+      </figure>
+      <div class="arrow" aria-hidden="true">&rarr;</div>
+      <figure class="panel">
+        <figcaption>Ada Lovelace.txt</figcaption>
+        <pre class="filecard"><span class="t">[12/25/2024 10:31]</span> <span class="n">Ada Lovelace</span>: Are we
+  still on for Thursday?
+<span class="t">[12/25/2024 10:32]</span> <span class="n">Me</span>: Yes &mdash; 10:30 at
+  the studio
+<span class="t">[12/25/2024 10:34]</span> <span class="n">Ada Lovelace</span>: Perfect,
+  sending the brief over now</pre>
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="what">
+    <div class="wrap">
+      <p class="eyebrow">What it's for</p>
+      <div class="prose">
+        <h2>Years of conversation, in a format anything can read</h2>
+        <p class="lede" style="margin-top:18px">WhatsApp keeps your messages locked inside its own app. Plain text sets them loose: paste a thread into an AI assistant, search a decade of messages with the tools you already use, or keep a readable archive that outlives any one piece of software.</p>
+      </div>
+
+      <div class="features">
+        <div class="feature">
+          <span class="tag">Full history</span>
+          <h3>Not just what's on screen</h3>
+          <p>The exporter scrolls back through each conversation, loading older messages as it goes, and collects everything it finds along the way.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Bulk export</span>
+          <h3>Every chat in one run</h3>
+          <p>Scan your chat list, tick the conversations you want, and leave it running. One file per chat, or a single combined file for one-shot AI ingestion.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Local only</span>
+          <h3>No server, ever</h3>
+          <p>The extension makes no network requests at all. It reads the page in front of you and writes files to your Downloads folder. Nothing else.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Structured</span>
+          <h3>Sender, date and time on every line</h3>
+          <p>Each message keeps its author and timestamp, so an AI reading the file can follow who said what, and when.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">JSON option</span>
+          <h3>Machine-readable output</h3>
+          <p>Export <code>.json</code> alongside the text, with parsed timestamps and message direction, when you want to script against the data.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Open source</span>
+          <h3>Read every line</h3>
+          <p>The whole extension is a handful of readable files on GitHub. No build step, no bundled dependencies, no remote code.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="how">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <div class="prose"><h2>Three steps, then leave it running</h2></div>
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>Open WhatsApp Web and click the extension</h3>
+            <p>Sign in to web.whatsapp.com as usual. The extension only ever has access to that one site.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Scan your chats and pick the ones you want</h3>
+            <p>Scanning lists every conversation in your sidebar. Filter it, tick what you need, or skip straight to exporting everything.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>Press download and let it work</h3>
+            <p>Each chat opens, scrolls back through its history, and is written to <code>Downloads/whatsapp-export/</code>. You can close the popup; the export keeps going.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="format">
+    <div class="wrap">
+      <p class="eyebrow">The output</p>
+      <div class="prose">
+        <h2>One readable file per conversation</h2>
+        <p style="margin-top:16px; color:var(--muted)">Every file opens with a header describing what it contains, then one line per message. Dates are reproduced exactly as WhatsApp displayed them &mdash; and the header states which order they're in, so nothing has to guess whether 03/04 means March or April.</p>
+      </div>
+      <pre class="sample"><span class="t">================================================================
+WhatsApp chat export
+Chat:</span> Ada Lovelace
+<span class="t">Messages:</span> 1204
+<span class="t">Range:</span> 03/14/2023 09:02 -&gt; 09/07/2026 18:41
+<span class="t">Date format:</span> MM/DD/YYYY (as displayed by WhatsApp)
+<span class="t">Exported:</span> 2026-09-07T18:42:03.918Z
+<span class="t">================================================================</span>
+
+<span class="t">[12/25/2024 10:31]</span> <span class="n">Ada Lovelace</span>: Hello there
+<span class="t">[12/25/2024 10:32]</span> <span class="n">Me</span>: Hi! How did the talk go?
+<span class="t">[12/25/2024 10:33]</span> <span class="n">Ada Lovelace</span>: <span class="s">&lt;image omitted&gt;</span> here's the room
+<span class="t">[12/25/2024 10:35]</span> <span class="n">Me</span>: <span class="s">(replying to: Hello there)</span> still around?
+<span class="t">[12/25/2024 10:40]</span> * Messages and calls are end-to-end encrypted.</pre>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="privacy">
+    <div class="wrap">
+      <p class="eyebrow">Privacy</p>
+      <div class="prose">
+        <h2>It cannot leak your messages, because it never sends them anywhere</h2>
+        <p style="margin-top:16px; color:var(--muted)">This isn't a promise about how carefully data is handled on a server. There is no server. The extension has no code that opens a network connection, which you can verify yourself by reading the source &mdash; it is a few hundred lines of plain JavaScript.</p>
+      </div>
+      <div class="claims">
+        <div class="claim"><strong>No servers</strong><span>Nothing is uploaded, because there is nowhere to upload it to.</span></div>
+        <div class="claim"><strong>No analytics</strong><span>No telemetry, no crash reporting, no usage tracking.</span></div>
+        <div class="claim"><strong>No accounts</strong><span>Nothing to sign up for and no identifiers of any kind.</span></div>
+        <div class="claim"><strong>One site</strong><span>Access is limited to web.whatsapp.com and nowhere else.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="install">
+    <div class="wrap">
+      <p class="eyebrow">Install</p>
+      <div class="prose">
+        <h2>Load it in about a minute</h2>
+        <p style="margin-top:16px; color:var(--muted)">Download the latest release from GitHub, then load it as an unpacked extension.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div><h3>Download and unzip the latest release</h3><p>Grab the zip from the releases page on GitHub and unzip it somewhere you'll keep it.</p></div></div>
+        <div class="step"><div><h3>Open chrome://extensions and turn on Developer mode</h3><p>The toggle sits in the top-right corner of the page.</p></div></div>
+        <div class="step"><div><h3>Click "Load unpacked" and choose the folder</h3><p>Chrome loads the extension straight away; its icon appears in your toolbar.</p></div></div>
+        <div class="step"><div><h3>Open WhatsApp Web and start exporting</h3><p>Sign in, click the extension icon, and scan your chats.</p></div></div>
+      </div>
+      <p class="cta" style="margin-top:34px">
+        <a class="btn btn--primary" href="https://github.com/otrodigital/whatsapp-chats-downloader" rel="noopener">Download from GitHub</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--tint" id="limits">
+    <div class="wrap">
+      <p class="eyebrow">Worth knowing first</p>
+      <div class="prose"><h2>What it doesn't do</h2></div>
+      <div class="limits">
+        <div>
+          <h3>Opening a chat marks it as read</h3>
+          <p>The exporter clicks through conversations exactly as you would, so unread badges clear and read receipts are sent where you have them switched on. Export a small selection first if that matters to you.</p>
+        </div>
+        <div>
+          <h3>Media isn't downloaded</h3>
+          <p>Images, audio, video and documents appear as placeholders such as <code>&lt;image omitted&gt;</code>, matching the convention WhatsApp uses in its own exports. Captions are kept.</p>
+        </div>
+        <div>
+          <h3>Long histories take time</h3>
+          <p>Loading years of messages means scrolling back through the whole conversation. Several minutes per large chat is normal, which is why there are caps for message count and date range.</p>
+        </div>
+        <div>
+          <h3>Archived chats are skipped</h3>
+          <p>Only conversations in your main sidebar list are exported.</p>
+        </div>
+        <div>
+          <h3>WhatsApp can change its markup</h3>
+          <p>The exporter reads the page's structure, so a redesign on WhatsApp's side can break it until the extension is updated. It reports a clear error rather than writing an empty file.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="faq">
+    <div class="wrap">
+      <p class="eyebrow">Questions</p>
+      <div class="prose"><h2>Frequently asked</h2></div>
+      <div class="faq">
+        <details>
+          <summary>Is it free?</summary>
+          <p>Yes. It's free and open source, with no paid tier, and the full source is on GitHub for anyone to read or modify.</p>
+        </details>
+        <details>
+          <summary>Do my messages get uploaded anywhere?</summary>
+          <p>No. The extension makes no network requests at all. It reads the conversations already displayed in your browser and writes files to your own Downloads folder. There is no server involved at any point.</p>
+        </details>
+        <details>
+          <summary>How is this different from WhatsApp's own export?</summary>
+          <p>WhatsApp can email you one conversation at a time from your phone. This exports many conversations in a single run, straight to files on your computer, in a consistent format with a header describing each file's contents.</p>
+        </details>
+        <details>
+          <summary>Can I use the exported files with ChatGPT or Claude?</summary>
+          <p>That's what the format is designed for. Each line carries the sender, date and time, so an AI can follow the conversation. There's also an option to write every chat into a single combined file for pasting or uploading in one go.</p>
+        </details>
+        <details>
+          <summary>Does it export group chats?</summary>
+          <p>Yes. In group conversations each message keeps the name of the person who sent it, exactly as WhatsApp displays it.</p>
+        </details>
+        <details>
+          <summary>Will it download my photos and voice notes?</summary>
+          <p>No. Media files are not saved. They appear in the text as placeholders such as <code>&lt;image omitted&gt;</code> or <code>&lt;audio omitted&gt;</code>, with any caption preserved.</p>
+        </details>
+        <details>
+          <summary>Does it work on Firefox or Safari?</summary>
+          <p>Not currently. It's built for Chrome and Chromium-based browsers such as Edge, Brave and Arc, and needs Chrome 102 or later.</p>
+        </details>
+        <details>
+          <summary>Is this made by WhatsApp?</summary>
+          <p>No. It's an independent tool from OTRO Digital, and is not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <div class="foot-top">
+    <div>
+      <a class="brand" href="/" style="font-size:16px">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#0f7c5f"/><path d="M19 5.5H5a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 5 15.5h1.2v3l3.4-3h9.4a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 19 5.5Z" fill="#c6eadb"/></svg>
+        Chat Exporter for WhatsApp Web
+      </a>
+      <p style="margin-top:10px">Built by <a href="https://otro.digital" rel="noopener">OTRO Digital</a></p>
+    </div>
+    <nav>
+      <a href="https://github.com/otrodigital/whatsapp-chats-downloader" rel="noopener">GitHub</a>
+      <a href="https://github.com/otrodigital/whatsapp-chats-downloader/blob/main/PRIVACY.md" rel="noopener">Privacy policy</a>
+      <a href="https://github.com/otrodigital/whatsapp-chats-downloader/issues" rel="noopener">Report an issue</a>
+    </nav>
+  </div>
+  <p class="fine">Not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc. "WhatsApp" is a trademark of its respective owner. Export only conversations you are a party to, and remember that exported files are plain, unencrypted text on your disk.</p>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://whatsapp-chats-downloader.otro.digital/#app",
+      "name": "Chat Exporter for WhatsApp Web",
+      "description": "A free, open-source Chrome extension that exports WhatsApp Web conversations to plain .txt files, with full chat history, sender names and timestamps. Runs entirely in the browser with no servers and no analytics.",
+      "url": "https://whatsapp-chats-downloader.otro.digital/",
+      "downloadUrl": "https://github.com/otrodigital/whatsapp-chats-downloader",
+      "applicationCategory": "BrowserApplication",
+      "applicationSubCategory": "Browser Extension",
+      "operatingSystem": "Chrome 102 or later",
+      "browserRequirements": "Requires Chrome 102 or later",
+      "softwareVersion": "1.0.0",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@id": "https://otro.digital/#organization" },
+      "publisher": { "@id": "https://otro.digital/#organization" },
+      "featureList": [
+        "Export WhatsApp Web conversations to .txt files",
+        "Scroll back through full chat history",
+        "Bulk export many chats in one run",
+        "Optional combined single-file export",
+        "Optional JSON export with parsed timestamps",
+        "Runs locally with no network requests"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://otro.digital/#organization",
+      "name": "OTRO Digital",
+      "url": "https://otro.digital"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://whatsapp-chats-downloader.otro.digital/#website",
+      "url": "https://whatsapp-chats-downloader.otro.digital/",
+      "name": "Chat Exporter for WhatsApp Web",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://otro.digital/#organization" },
+      "about": { "@id": "https://whatsapp-chats-downloader.otro.digital/#app" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://whatsapp-chats-downloader.otro.digital/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. It's free and open source, with no paid tier, and the full source is on GitHub for anyone to read or modify." } },
+        { "@type": "Question", "name": "Do my messages get uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The extension makes no network requests at all. It reads the conversations already displayed in your browser and writes files to your own Downloads folder. There is no server involved at any point." } },
+        { "@type": "Question", "name": "How is this different from WhatsApp's own export?", "acceptedAnswer": { "@type": "Answer", "text": "WhatsApp can email you one conversation at a time from your phone. This exports many conversations in a single run, straight to files on your computer, in a consistent format with a header describing each file's contents." } },
+        { "@type": "Question", "name": "Can I use the exported files with ChatGPT or Claude?", "acceptedAnswer": { "@type": "Answer", "text": "That's what the format is designed for. Each line carries the sender, date and time, so an AI can follow the conversation. There's also an option to write every chat into a single combined file for pasting or uploading in one go." } },
+        { "@type": "Question", "name": "Does it export group chats?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. In group conversations each message keeps the name of the person who sent it, exactly as WhatsApp displays it." } },
+        { "@type": "Question", "name": "Will it download my photos and voice notes?", "acceptedAnswer": { "@type": "Answer", "text": "No. Media files are not saved. They appear in the text as placeholders such as <image omitted> or <audio omitted>, with any caption preserved." } },
+        { "@type": "Question", "name": "Does it work on Firefox or Safari?", "acceptedAnswer": { "@type": "Answer", "text": "Not currently. It's built for Chrome and Chromium-based browsers such as Edge, Brave and Arc, and needs Chrome 102 or later." } },
+        { "@type": "Question", "name": "Is this made by WhatsApp?", "acceptedAnswer": { "@type": "Answer", "text": "No. It's an independent tool from OTRO Digital, and is not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc." } }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WhatsApp Chat Downloader</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup">
+      <header class="header">
+        <div class="mark">WA</div>
+        <div>
+          <p class="eyebrow">Local export tool</p>
+          <h1>Chat downloader</h1>
+        </div>
+      </header>
+
+      <section class="notice">
+        <strong>Keep the WhatsApp Web tab open and in front</strong>
+        <span>Chats are read from the page itself, so nothing leaves your machine. Opening a chat marks it as read.</span>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Chats</span>
+          <button id="scan" class="button button-quiet button-small">Scan chats</button>
+        </div>
+        <input id="filter" class="input" type="search" placeholder="Filter chats" disabled>
+        <div id="chat-list" class="chat-list" aria-live="polite">
+          <p class="empty">Scan to pick chats, or export everything without scanning.</p>
+        </div>
+        <div class="panel-foot">
+          <label class="check"><input id="select-all" type="checkbox" disabled> Select all</label>
+          <span id="selection-count" class="muted">0 selected</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><span class="panel-title">Options</span></div>
+        <div class="grid">
+          <div>
+            <label class="field-label" for="speed">Speed</label>
+            <select id="speed" class="select">
+              <option value="350">Fast</option>
+              <option value="700" selected>Balanced</option>
+              <option value="1200">Careful</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="since">History</label>
+            <select id="since" class="select">
+              <option value="0" selected>Everything</option>
+              <option value="30">Last 30 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="365">Last year</option>
+            </select>
+          </div>
+        </div>
+        <label class="field-label" for="max-messages">Max messages per chat (0 = no limit)</label>
+        <input id="max-messages" class="input" type="number" min="0" step="100" value="0">
+        <label class="check"><input id="per-chat" type="checkbox" checked> One .txt per chat</label>
+        <label class="check"><input id="combined" type="checkbox"> Also save one combined .txt</label>
+        <label class="check"><input id="json" type="checkbox"> Also save .json per chat</label>
+      </section>
+
+      <div class="actions">
+        <button id="start" class="button button-primary">Download chats</button>
+        <button id="stop" class="button button-quiet" disabled>Stop</button>
+      </div>
+
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-track"><div id="progress" class="progress"></div></div>
+        <div class="status-row"><span id="status">Ready</span><span id="count">0 / 0</span></div>
+      </div>
+
+      <p id="error" class="error" hidden></p>
+      <details class="log-wrap">
+        <summary>Activity log</summary>
+        <div id="log" class="log"></div>
+      </details>
+      <p class="footnote">Files land in your Downloads folder under <code>whatsapp-export/</code>.</p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

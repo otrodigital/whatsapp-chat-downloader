@@ -1,0 +1,31 @@
+/* Shared look for store artwork - mirrors popup.css. */
+:root {
+  --ink: #18342e;
+  --muted: #6d7c77;
+  --paper: #f8fbf9;
+  --mint: #c6eadb;
+  --green: #0f7c5f;
+  --green-dark: #075b47;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body {
+  display: grid;
+  place-items: center;
+  background: var(--green-dark);
+  background-image: radial-gradient(circle at 20% 15%, #128a68 0%, transparent 55%),
+                    radial-gradient(circle at 85% 90%, #0a4f3e 0%, transparent 60%);
+  color: #fff;
+  font-family: Georgia, 'Times New Roman', serif;
+  -webkit-font-smoothing: antialiased;
+}
+.mark {
+  display: grid;
+  place-items: center;
+  background: var(--mint);
+  border-radius: 26% 26% 26% 8%;
+  color: var(--green-dark);
+}
+.mark svg { width: 62%; height: 62%; }
+h1 { font-weight: 500; letter-spacing: -0.01em; line-height: 1.05; }
+p { color: var(--mint); font-family: Arial, sans-serif; line-height: 1.45; }

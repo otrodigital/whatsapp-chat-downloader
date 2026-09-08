@@ -1,0 +1,8 @@
+{
+  "name": "whatsapp-chat-downloader-tests",
+  "private": true,
+  "type": "module",
+  "description": "Unit tests for the content-script parser. Kept out of the extension root so node_modules never ends up in the loaded extension.",
+  "scripts": { "test": "node parser.test.mjs" },
+  "devDependencies": { "jsdom": "^26.0.0" }
+}
