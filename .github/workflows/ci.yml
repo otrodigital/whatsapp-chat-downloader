@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Tests and validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: test/package-lock.json
+
+      - name: Syntax-check extension scripts
+        run: |
+          for file in content.js popup.js background.js diagnose.js; do
+            node --check "$file"
+          done
+
+      - name: Validate extension package
+        run: node tools/validate.js
+
+      - name: Check microsite markup
+        run: node tools/check-site.js
+
+      - name: Install test dependencies
+        working-directory: test
+        run: npm ci
+
+      - name: Run parser tests
+        working-directory: test
+        run: npm test
+
+      - name: Build the extension package
+        run: bash build.sh
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-package
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 14

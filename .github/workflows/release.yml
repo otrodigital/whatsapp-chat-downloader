@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: test/package-lock.json
+
+      # A tag that disagrees with the manifest ships a zip labelled with the
+      # wrong version, which the Chrome Web Store will then reject.
+      - name: Check the tag matches the manifest version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          manifest=$(node -p "require('./manifest.json').version")
+          if [ "$tag" != "$manifest" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match manifest version ${manifest}"
+            exit 1
+          fi
+          echo "Releasing v${manifest}"
+
+      - name: Install test dependencies
+        working-directory: test
+        run: npm ci
+
+      # build.sh validates, runs the test suite, and refuses to emit a zip if
+      # anything is inconsistent.
+      - name: Build the extension package
+        run: bash build.sh
+
+      - name: Publish the GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.zip \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes

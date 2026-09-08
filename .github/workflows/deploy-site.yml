@@ -1,0 +1,73 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'tools/check-site.js'
+      - '.github/workflows/deploy-site.yml'
+  workflow_dispatch:
+
+# Needed by actions/deploy-pages: it authenticates with the repository's own
+# OIDC token, so there are no secrets to configure.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a running deploy, but only queue one at a time.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # The site publishes only if its markup still checks out: structured data
+      # parses, the FAQ schema matches the visible questions, meta tags are
+      # within length limits, and every referenced asset exists.
+      - name: Check microsite markup
+        run: node tools/check-site.js
+
+      # Publish only what belongs on the web: the site's own README and the
+      # Open Graph source template stay in the repo.
+      - name: Stage publishable files
+        run: |
+          mkdir -p _site
+          rsync -a --exclude 'README.md' --exclude 'src/' site/ _site/
+          echo "Publishing:"
+          find _site -type f | sort | sed 's/^/  /'
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Summarise
+        run: |
+          echo "Deployed: ${{ steps.deployment.outputs.page_url }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Domain: https://whatsapp-chats-downloader.otro.digital" >> "$GITHUB_STEP_SUMMARY"

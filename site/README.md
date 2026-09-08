@@ -15,26 +15,36 @@ page is fast without a toolchain.
 | `favicon.svg` | Scalable favicon; `apple-touch-icon.png` is the extension's 128px icon. |
 | `robots.txt` | Allows everything, points at the sitemap. |
 | `sitemap.xml` | Single URL. Update `lastmod` when the content changes. |
-| `vercel.json` | Cache and security headers. |
-| `src/og.html` | Source for the social card. Re-render after editing. |
+| `CNAME` | Custom domain for GitHub Pages. |
+| `.nojekyll` | Serves the files verbatim, with no Jekyll processing. |
+| `src/og.html` | Source for the social card. Re-render after editing. Not published. |
 
 ## Deploy
 
-**Vercel** (recommended, matches `vercel.json`):
+Deployment is automatic: [`.github/workflows/deploy-site.yml`](../.github/workflows/deploy-site.yml)
+publishes this folder to GitHub Pages on every push to `main` that touches `site/`. There are no
+secrets to configure — Pages authenticates with the repository's own token.
 
-```sh
-cd site
-vercel --prod
-```
+Two one-time setup steps:
 
-Then add `whatsapp-chats-downloader.otro.digital` under the project's Domains, and point a CNAME at
-`cname.vercel-dns.com` in the `otro.digital` DNS zone.
+1. **Repository → Settings → Pages → Build and deployment → Source: GitHub Actions.**
+   Without this the workflow fails at the `configure-pages` step.
+2. **DNS.** In the `otro.digital` zone, add a `CNAME` record for
+   `whatsapp-chats-downloader` pointing at `otrodigital.github.io`. Then set the same domain under
+   Settings → Pages → Custom domain and tick **Enforce HTTPS** once the certificate is issued
+   (usually a few minutes).
 
-If you deploy the repository root rather than this folder, set the project's **Root Directory** to
-`site` in Vercel's settings, so the extension source isn't published alongside the page.
+The `CNAME` file in this folder carries the domain into each deploy, so it survives republishing.
 
-**Any static host** works too — it is one HTML file and four assets. For GitHub Pages, serve this
-folder from the `gh-pages` branch or `/site` on `main`.
+`README.md` and `src/` are excluded from what gets published; everything else in this folder is
+served at the domain root.
+
+### Note on headers
+
+GitHub Pages does not support custom response headers, so there is no cache-control or
+security-header configuration. Pages sets sensible caching itself and enforces HTTPS/HSTS on custom
+domains once **Enforce HTTPS** is on. If you later need header control — a CSP, for instance — that
+is the point to move to a host that allows it.
 
 ## After the first deploy
 
