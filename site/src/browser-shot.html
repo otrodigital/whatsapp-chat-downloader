@@ -1,0 +1,195 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../popup.css">
+<style>
+  :root { --frame: #d9e4df; --chrome: #eef3f1; --wash: #e7efeb; }
+  * { box-sizing: border-box; }
+  /* popup.css claims <body>; restate it for the composition. */
+  body {
+    width: 1240px; height: 880px; margin: 0; display: grid; place-items: center;
+    background: #0c1a16;
+    background-image: radial-gradient(circle at 15% 10%, #123f31 0%, transparent 55%);
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .window {
+    position: relative; width: 1120px; height: 800px; border-radius: 12px; overflow: hidden;
+    background: #fff; box-shadow: 0 40px 90px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.10);
+  }
+  .chrome { background: var(--chrome); border-bottom: 1px solid var(--frame); }
+  .titlebar { display: flex; align-items: center; gap: 8px; padding: 11px 14px 0; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: #cbd6d1; }
+  .tabs { display: flex; padding: 9px 14px 0; }
+  .tab {
+    display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px 8px 0 0;
+    background: #fff; font-size: 12.5px; color: #18342e;
+  }
+  .tab .fav { width: 14px; height: 14px; border-radius: 3px; background: #25d366; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 9px 14px 11px; background: #fff; border-bottom: 1px solid var(--frame); }
+  .nav { display: flex; gap: 9px; color: #93a49e; font-size: 14px; }
+  .url {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    padding: 7px 13px; border-radius: 999px; background: #f1f5f3;
+    font-size: 12.5px; color: #4a5c56;
+  }
+  .url .lock { color: #6d7c77; font-size: 11px; }
+  .icons { display: flex; align-items: center; gap: 10px; }
+  .icons .puzzle { width: 22px; height: 22px; border-radius: 5px; background: #e4ebe8; }
+  .ext-icon {
+    width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center;
+    background: #0f7c5f; box-shadow: 0 0 0 3px rgba(15,124,95,.20);
+  }
+  .ext-icon svg { width: 17px; height: 17px; }
+  .avatar { width: 22px; height: 22px; border-radius: 50%; background: #cbd6d1; }
+
+  /* Abstract stand-in for the page behind - deliberately not a replica of any
+     third-party interface. */
+  .page { position: relative; height: 100%; display: grid; grid-template-columns: 300px 1fr; background: var(--wash); }
+  .list { border-right: 1px solid var(--frame); background: #f4f8f6; padding: 14px 12px; display: flex; flex-direction: column; gap: 11px; }
+  .list-row { display: flex; align-items: center; gap: 10px; }
+  .list-row i { width: 34px; height: 34px; border-radius: 50%; background: #dde7e2; flex: none; }
+  .list-row div { flex: 1; display: grid; gap: 5px; }
+  .list-row div span { height: 7px; border-radius: 4px; background: #dde7e2; }
+  .list-row div span:last-child { width: 68%; background: #e7efeb; }
+  .thread { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 44%; height: 34px; border-radius: 13px; background: #fff; }
+  .msg.out { align-self: flex-end; background: #d6f0e4; }
+  .msg.w1 { width: 38%; } .msg.w2 { width: 30%; } .msg.w3 { width: 44%; } .msg.w4 { width: 26%; }
+
+  /* The real popup, anchored under its toolbar icon. */
+  .popup-anchor { position: absolute; top: 92px; right: 18px; }
+  .pointer {
+    position: absolute; top: -6px; right: 44px; z-index: 2; width: 14px; height: 14px;
+    background: var(--paper); transform: rotate(45deg); border-radius: 2px;
+  }
+  .popup-frame {
+    width: 372px; zoom: .70;
+    border-radius: 16px; background: var(--paper);
+    box-shadow: 0 24px 54px rgba(6,25,20,.30), 0 0 0 1px rgba(6,25,20,.10);
+  }
+</style>
+
+<div class="window">
+  <div class="chrome">
+    <div class="titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <div class="tabs"><div class="tab"><span class="fav"></span>WhatsApp</div></div>
+    <div class="bar">
+      <div class="nav"><span>&#8592;</span><span>&#8594;</span><span>&#10227;</span></div>
+      <div class="url"><span class="lock">&#128274;</span>web.whatsapp.com</div>
+      <div class="icons">
+        <span class="puzzle"></span>
+        <span class="ext-icon">
+          <svg viewBox="0 0 24 24" fill="#c6eadb" aria-hidden="true"><path d="M19 5.5H5a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 5 15.5h1.2v3l3.4-3h9.4a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 19 5.5Z"/></svg>
+        </span>
+        <span class="avatar"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="list">
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+      <div class="list-row"><i></i><div><span></span><span></span></div></div>
+    </div>
+    <div class="thread">
+      <div class="msg w1"></div><div class="msg out w2"></div><div class="msg w3"></div>
+      <div class="msg out w4"></div><div class="msg w2"></div><div class="msg out w1"></div>
+      <div class="msg w4"></div>
+    </div>
+  </div>
+
+  <div class="popup-anchor">
+    <div class="pointer"></div>
+    <div class="popup-frame">
+    <main class="popup">
+      <header class="header">
+        <div class="mark">WA</div>
+        <div>
+          <p class="eyebrow">Local export tool</p>
+          <h1>Chat downloader</h1>
+        </div>
+      </header>
+
+      <section class="notice">
+        <strong>Keep the WhatsApp Web tab open and in front</strong>
+        <span>Chats are read from the page itself, so nothing leaves your machine. Opening a chat marks it as read.</span>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Chats</span>
+          <button id="scan" class="button button-quiet button-small">Rescan</button>
+        </div>
+        <input id="filter" class="input" type="search" placeholder="Filter chats">
+        <div id="chat-list" class="chat-list" aria-live="polite">
+          <label class="chat-row"><input type="checkbox" checked><span>Ada Lovelace</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Design Studio</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Family</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Marcus Chen</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Weekend Football</span></label>
+<label class="chat-row"><input type="checkbox"><span>Priya Raman</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Book Club</span></label>
+<label class="chat-row"><input type="checkbox" checked><span>Dad</span></label>
+        </div>
+        <div class="panel-foot">
+          <label class="check"><input id="select-all" type="checkbox"> Select all</label>
+          <span id="selection-count" class="muted">7 of 8 selected</span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><span class="panel-title">Options</span></div>
+        <div class="grid">
+          <div>
+            <label class="field-label" for="speed">Speed</label>
+            <select id="speed" class="select">
+              <option value="350">Fast</option>
+              <option value="700" selected>Balanced</option>
+              <option value="1200">Careful</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="since">History</label>
+            <select id="since" class="select">
+              <option value="0" selected>Everything</option>
+              <option value="30">Last 30 days</option>
+              <option value="90">Last 90 days</option>
+              <option value="365">Last year</option>
+            </select>
+          </div>
+        </div>
+        <label class="field-label" for="max-messages">Max messages per chat (0 = no limit)</label>
+        <input id="max-messages" class="input" type="number" min="0" step="100" value="0">
+        <label class="check"><input id="per-chat" type="checkbox" checked> One .txt per chat</label>
+        <label class="check"><input id="combined" type="checkbox"> Also save one combined .txt</label>
+        <label class="check"><input id="json" type="checkbox"> Also save .json per chat</label>
+      </section>
+
+      <div class="actions">
+        <button id="start" class="button button-primary" disabled>Downloading 7 chats</button>
+        <button id="stop" class="button button-quiet">Stop</button>
+      </div>
+
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-track"><div id="progress" class="progress" style="width:38%"></div></div>
+        <div class="status-row"><span id="status">Loading history - Ada Lovelace (1,204 messages)</span><span id="count">3 / 8</span></div>
+      </div>
+
+      <p id="error" class="error" hidden></p>
+      <details class="log-wrap">
+        <summary>Activity log</summary>
+        <div id="log" class="log"></div>
+      </details>
+      <p class="footnote">Files land in your Downloads folder under <code>whatsapp-export/</code>.</p>
+      <p class="brandline">A free tool by <a href="https://otro.digital" target="_blank" rel="noopener">OTRO Digital</a></p>
+    </main>
+    
+  </div>
+  </div>
+</div>

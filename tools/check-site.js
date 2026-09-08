@@ -47,9 +47,18 @@ for (const [, href] of html.matchAll(/href="#([^"]+)"/g)) {
 }
 for (const [, url] of html.matchAll(/href="(http:\/\/[^"]+)"/g)) problems.push(`insecure link: ${url}`);
 
-for (const asset of ['og-image.png', 'favicon.svg', 'apple-touch-icon.png', 'robots.txt', 'sitemap.xml']) {
+for (const asset of ['og-image.png', 'favicon.svg', 'apple-touch-icon.png', 'robots.txt', 'sitemap.xml', 'CNAME']) {
   if (!fs.existsSync(path.join(root, 'site', asset))) problems.push(`missing site/${asset}`);
 }
+
+// Every locally referenced image must exist and declare its dimensions, so the
+// page reserves space for it and does not shift as it loads.
+for (const [tag, src] of html.matchAll(/<img[^>]*src="(?!https?:)\/?([^"]+)"[^>]*>/g)) {
+  if (!fs.existsSync(path.join(root, 'site', src))) problems.push(`<img> references missing site/${src}`);
+  if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) problems.push(`<img src="${src}"> is missing width/height`);
+  if (!/\salt="[^"]+"/.test(tag)) problems.push(`<img src="${src}"> is missing alt text`);
+}
+ok.push(`images: ${[...html.matchAll(/<img[^>]*>/g)].length} checked`);
 
 for (const tag of ['section', 'div', 'details']) {
   const open = [...html.matchAll(new RegExp(`<${tag}[\\s>]`, 'g'))].length;

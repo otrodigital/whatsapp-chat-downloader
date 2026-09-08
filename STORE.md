@@ -146,8 +146,10 @@ Privacy policy URL: wherever you host `PRIVACY.md`.
 
 Required: at least one, at **1280x800** or 640x400 PNG. Up to five.
 
-`store/` contains renders of the real popup UI to use as a starting point, but the strongest listing
-shows the extension mid-export against your own account. Capture these yourself:
+`store/popup-1280x800.png` and `site/browser.png` are renders of the real popup UI, useful as a
+starting point. They are compositions, not captures: the browser frame and the page behind the popup
+are illustrations. Store policy wants screenshots of the working extension, so capture these
+yourself against your own account:
 
 1. The popup with a scanned chat list, chats ticked — the core interaction.
 2. An export in progress: progress bar, current chat, message count ticking up.
