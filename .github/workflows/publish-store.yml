@@ -1,0 +1,121 @@
+name: Publish to Chrome Web Store
+
+# Manual only, and deliberately so: an automatic publish on every tag can push a
+# broken build to real users before anyone has looked at it.
+#
+# This can only UPDATE an item that already exists. The first submission has to
+# be done by hand in the dashboard, because that is where the item id, the
+# listing copy, the screenshots and the privacy disclosures are created.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish after upload. Leave off to upload as a draft and review it in the dashboard first.'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Upload package
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: test/package-lock.json
+
+      - name: Check credentials are configured
+        env:
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+        run: |
+          missing=()
+          [ -n "$CLIENT_ID" ]     || missing+=("CHROME_CLIENT_ID")
+          [ -n "$CLIENT_SECRET" ] || missing+=("CHROME_CLIENT_SECRET")
+          [ -n "$REFRESH_TOKEN" ] || missing+=("CHROME_REFRESH_TOKEN")
+          [ -n "$EXTENSION_ID" ]  || missing+=("CHROME_EXTENSION_ID")
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repository secret(s): ${missing[*]}"
+            echo "See STORE.md, 'Automating updates', for how to obtain each one." >&2
+            exit 1
+          fi
+
+      - name: Install test dependencies
+        working-directory: test
+        run: npm ci
+
+      - name: Build the package
+        run: bash build.sh
+
+      - name: Upload to the Chrome Web Store
+        env:
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+        run: |
+          set -euo pipefail
+          version=$(node -p "require('./manifest.json').version")
+          zip=$(ls dist/*.zip | head -1)
+          echo "Uploading $zip (v$version) to item $EXTENSION_ID"
+
+          # Exchange the long-lived refresh token for a short-lived access token.
+          token=$(curl -sS -X POST "https://oauth2.googleapis.com/token" \
+            -d "client_id=$CLIENT_ID" \
+            -d "client_secret=$CLIENT_SECRET" \
+            -d "refresh_token=$REFRESH_TOKEN" \
+            -d "grant_type=refresh_token" | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).access_token || ''")
+          if [ -z "$token" ] || [ "$token" = "undefined" ]; then
+            echo "::error::Could not obtain an access token. The refresh token may have expired or been revoked."
+            exit 1
+          fi
+
+          response=$(curl -sS -X PUT \
+            -H "Authorization: Bearer $token" \
+            -H "x-goog-api-version: 2" \
+            -T "$zip" \
+            "https://www.googleapis.com/upload/chromewebstore/v1.1/items/$EXTENSION_ID")
+          echo "$response"
+
+          state=$(echo "$response" | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).uploadState || 'UNKNOWN'")
+          if [ "$state" != "SUCCESS" ]; then
+            echo "::error::Upload failed with state $state"
+            exit 1
+          fi
+          echo "Uploaded v$version as a draft." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Submit for review
+        if: inputs.publish
+        env:
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+        run: |
+          set -euo pipefail
+          token=$(curl -sS -X POST "https://oauth2.googleapis.com/token" \
+            -d "client_id=$CLIENT_ID" -d "client_secret=$CLIENT_SECRET" \
+            -d "refresh_token=$REFRESH_TOKEN" -d "grant_type=refresh_token" \
+            | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).access_token || ''")
+
+          response=$(curl -sS -X POST \
+            -H "Authorization: Bearer $token" \
+            -H "x-goog-api-version: 2" \
+            -H "Content-Length: 0" \
+            "https://www.googleapis.com/chromewebstore/v1.1/items/$EXTENSION_ID/publish")
+          echo "$response"
+          echo "Submitted for review." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Note draft-only run
+        if: ${{ !inputs.publish }}
+        run: |
+          echo "Uploaded as a draft only. Review it in the dashboard, then publish there or re-run with 'publish' ticked." >> "$GITHUB_STEP_SUMMARY"

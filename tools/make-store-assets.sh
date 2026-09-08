@@ -24,11 +24,17 @@ shoot store/src/promo.html      store/promo-440x280.png    440  280
 shoot store/src/marquee.html    store/marquee-1400x560.png 1400 560
 shoot store/src/popup-shot.html store/popup-1280x800.png   1280 800
 
+# Two sizes, each rendered at its target scale rather than resampled, so the
+# page can pick one with srcset instead of shipping a 2x image to every visitor.
 echo "==> Rendering microsite product shot"
-"$CHROME" --headless=new --disable-gpu --hide-scrollbars --force-device-scale-factor=2 \
-  --window-size=1240,880 --screenshot=site/browser.png \
-  "file://$PWD/site/src/browser-shot.html" >/dev/null 2>&1
-echo "    site/browser.png  (1240x880 @2x)"
+for scale in 1 1.6; do
+  out=site/browser.png
+  [ "$scale" = "1.6" ] && out=site/browser-2x.png
+  "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
+    --force-device-scale-factor="$scale" --window-size=1240,880 \
+    --screenshot="$out" "file://$PWD/site/src/browser-shot.html" >/dev/null 2>&1
+  echo "    $out  (1240x880 @${scale}x)"
+done
 
 echo "==> Rendering microsite Open Graph image"
 "$CHROME" --headless=new --disable-gpu --hide-scrollbars --window-size=1200,630 \

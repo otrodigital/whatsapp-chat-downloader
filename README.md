@@ -236,6 +236,7 @@ See [site/README.md](site/README.md) for the one-time Pages and DNS setup, and p
 | [`ci.yml`](.github/workflows/ci.yml) | Push to `main`, any PR | Syntax-checks the extension scripts, runs the validators and the parser tests, builds the package and uploads it as an artifact. |
 | [`deploy-site.yml`](.github/workflows/deploy-site.yml) | Changes under `site/` on `main` | Publishes the microsite to GitHub Pages. Gated on `check-site.js`. |
 | [`release.yml`](.github/workflows/release.yml) | Tag matching `v*` | Verifies the tag matches `manifest.json`, builds the zip and publishes a GitHub release with it attached. |
+| [`publish-store.yml`](.github/workflows/publish-store.yml) | Manual | Uploads a build to an existing Chrome Web Store item, as a draft by default. Needs four secrets; see [STORE.md](STORE.md). |
 
 Cutting a release:
 
@@ -247,8 +248,9 @@ git tag v1.0.1 && git push origin v1.0.1
 The tag must match the manifest version or the workflow fails — otherwise you ship a zip labelled
 with the wrong version, which the store then rejects.
 
-No secrets are needed by any of the three workflows — Pages and the release both authenticate with
-the repository's built-in token.
+Neither `ci.yml`, `deploy-site.yml` nor `release.yml` needs a secret — Pages and the release both
+authenticate with the repository's built-in token. Only `publish-store.yml` needs credentials, and
+only once you have a store listing to update.
 
 Pages needs one setting turned on before the first deploy: **Settings → Pages → Build and deployment
 → Source: GitHub Actions**. See [site/README.md](site/README.md) for that and the DNS record for the

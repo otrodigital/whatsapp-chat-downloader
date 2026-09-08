@@ -9,7 +9,10 @@ rejected. Read the two blockers first.
 
 ### 1. The name uses someone else's trademark
 
-`WhatsApp Chat Downloader` leads with a trademark you don't own. Store policy allows referring to a
+**Already applied** — `manifest.json` now reads `Chat Exporter for WhatsApp Web`. The note below
+explains why, in case you are considering changing it back.
+
+The old name, `WhatsApp Chat Downloader`, led with a trademark you don't own. Store policy allows referring to a
 product for compatibility, but not in a way that implies affiliation — and a name that *starts* with
 the trademark usually reads that way to a reviewer.
 
@@ -57,8 +60,11 @@ Chat Exporter for WhatsApp Web
 
 **Short description** (132 char max — this is the manifest `description`)
 ```
-Export your WhatsApp Web conversations to local .txt files, ready to feed to an AI.
+Export WhatsApp Web chats to TXT files. Bulk download your full chat history, ready for AI, backup or search. Runs locally.
 ```
+
+Store search weighs the name and this description heavily, so both lead with the terms people
+actually type: *export*, *WhatsApp Web*, *chats*, *TXT*, *download*, *chat history*, *backup*.
 
 **Category:** Productivity — **Language:** English
 
@@ -159,8 +165,67 @@ yourself against your own account:
 Blur or crop contact names before uploading. Store screenshots must show the real extension —
 don't dress up a mockup as a capture.
 
+## Step by step
+
+**One-time account setup**
+
+1. Go to the [Developer Dashboard](https://chrome.google.com/webstore/devconsole) and sign in with
+   the Google account that should own the listing. Use an account you control long-term — transferring
+   an item later is awkward.
+2. Pay the **one-time $5 registration fee**. Until it is paid you cannot create an item.
+3. Fill in the account-level publisher details: a public display name (use *OTRO Digital*), a contact
+   email, and verify that email. Unverified contact email blocks publishing.
+
+**Each submission**
+
+4. Build the package:
+
+   ```sh
+   ./build.sh          # -> dist/whatsapp-chat-downloader-<version>.zip
+   ```
+
+5. In the dashboard, **Items → Add new item**, and upload that zip. The store reads the name,
+   version, description and permissions from `manifest.json`.
+6. Fill in the **Store listing** tab: detailed description, category, language, screenshots, and
+   optionally the promo tiles in `store/`. All the copy is in the sections above.
+7. Fill in the **Privacy practices** tab: the single purpose statement, a justification for every
+   permission, and the "not being sold / not unrelated use / not creditworthiness" certifications.
+   Add the public URL where you host `PRIVACY.md`. **This tab rejects more submissions than the code
+   does** — an empty justification is an automatic bounce.
+8. Choose visibility: **Public**, **Unlisted** (reachable by link, not searchable), or **Private**
+   (specified accounts or a Workspace domain).
+9. **Submit for review.**
+
+**Publishing an update**
+
+10. Bump `version` in `manifest.json`, rebuild, and upload the new zip to the same item. The store
+    rejects a re-upload of a version number that already exists. Updates are reviewed too, though
+    usually faster, and roll out to existing users automatically.
+
 ## After submission
 
 Review typically takes a few days and can take longer for an extension that automates another site.
 If rejected, the notice names the policy section; the fixes are usually the name, the permission
 justifications, or the privacy policy URL.
+
+## Automating updates
+
+[`.github/workflows/publish-store.yml`](.github/workflows/publish-store.yml) uploads a new build to
+an existing item through the Chrome Web Store API. It is manual (**Actions → Publish to Chrome Web
+Store → Run workflow**) and defaults to uploading a **draft**, so you can look at it in the dashboard
+before anything reaches users. Tick `publish` to submit for review in the same run.
+
+It cannot do the first submission — the item, the listing copy, the screenshots and the privacy
+disclosures all have to exist first, and only the dashboard can create them.
+
+Four secrets are needed:
+
+| Secret | Where it comes from |
+| --- | --- |
+| `CHROME_EXTENSION_ID` | The 32-character id in the item's dashboard URL, once the item exists. |
+| `CHROME_CLIENT_ID` | Google Cloud console: create a project, enable the **Chrome Web Store API**, create an OAuth client of type *Desktop app*. |
+| `CHROME_CLIENT_SECRET` | Same OAuth client. |
+| `CHROME_REFRESH_TOKEN` | Obtained once, by authorising that client for the `https://www.googleapis.com/auth/chromewebstore` scope and exchanging the resulting code. |
+
+Keep the refresh token somewhere safe: it grants the ability to publish updates to your extension.
+Revoke it in your Google account's third-party access settings if it ever leaks.

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "WhatsApp Chat Downloader",
+  "name": "Chat Exporter for WhatsApp Web",
   "version": "1.0.0",
   "minimum_chrome_version": "102",
-  "description": "Export your WhatsApp Web conversations to local .txt files, ready to feed to an AI.",
+  "description": "Export WhatsApp Web chats to TXT files. Bulk download your full chat history, ready for AI, backup or search. Runs locally.",
   "permissions": [
     "storage",
     "downloads",
@@ -13,7 +13,7 @@
     "https://web.whatsapp.com/*"
   ],
   "action": {
-    "default_title": "WhatsApp Chat Downloader",
+    "default_title": "Chat Exporter for WhatsApp Web",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

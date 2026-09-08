@@ -59,6 +59,38 @@ is the point to move to a host that allows it.
 4. Preview the social card by pasting the URL into any chat app or LinkedIn's Post Inspector.
 5. Run Lighthouse. The page should score near 100 on performance; if it doesn't, the webfont is the
    first thing to look at.
+6. Confirm text compression is on — the local audit cannot check this, since the static server used
+   for it does not compress:
+
+   ```sh
+   curl -sI -H 'Accept-Encoding: gzip, br' https://whatsapp-chats-downloader.otro.digital/ | grep -i content-encoding
+   ```
+
+   Expect `gzip` or `br`. GitHub Pages applies this itself; if the header is missing, something is
+   serving the page uncompressed.
+
+## Keyword map
+
+Both the site and the Chrome Web Store listing target the same terms, so keep them in step when
+editing. Placement matters more than repetition; none of these should be forced into copy.
+
+| Term | Where it carries |
+| --- | --- |
+| export whatsapp chat(s) | `<title>`, `h1`, meta description, first paragraph |
+| whatsapp chat export chrome extension | `<title>` qualifier, hero eyebrow, install section |
+| download whatsapp chat history | meta description, "What it's for", FAQ |
+| whatsapp chat backup | FAQ ("How do I back up WhatsApp chats to my computer?") |
+| whatsapp chat to txt / text file | `h1`, output section `h2`, code sample |
+| export whatsapp chat for AI / ChatGPT | lede, features, FAQ |
+
+The `h2`s are written to carry a query each — "How to export WhatsApp chats in three steps",
+"Install the Chrome extension in about a minute" — rather than being pure voice.
+
+**No search-volume data backs this.** No keyword provider (DataForSEO, Semrush or Ahrefs) is
+connected to the `seo` CLI, so these are intent-based judgements, not measured demand. Connect one
+and run `seo reports run keyword-research` to replace them with real figures. Once the site is live
+and verified in Search Console, `seo reports run quick-wins` and `striking-distance` will show which
+terms actually landed.
 
 ## Editing
 

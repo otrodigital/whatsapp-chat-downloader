@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Export WhatsApp Chats to Text Files | Chat Exporter</title>
-<meta name="description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. Full history, no servers, no analytics. Ready for AI.">
+<title>Export WhatsApp Chats to Text Files | Chrome Extension</title>
+<meta name="description" content="Free Chrome extension to export WhatsApp Web chats to .txt files. Download your full chat history in bulk, ready for AI, backup or search. No servers.">
 <link rel="canonical" href="https://whatsapp-chats-downloader.otro.digital/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="theme-color" content="#0f7c5f">
@@ -16,7 +16,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:url" content="https://whatsapp-chats-downloader.otro.digital/">
 <meta property="og:title" content="Export WhatsApp Chats to Text Files">
-<meta property="og:description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. Full history, no servers, no analytics.">
+<meta property="og:description" content="Free Chrome extension to export WhatsApp Web chats to .txt files. Download your full chat history in bulk, ready for AI, backup or search.">
 <meta property="og:image" content="https://whatsapp-chats-downloader.otro.digital/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -24,7 +24,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Export WhatsApp Chats to Text Files">
-<meta name="twitter:description" content="A free, open-source Chrome extension that exports your WhatsApp Web conversations to plain .txt files. No servers, no analytics.">
+<meta name="twitter:description" content="Free Chrome extension to export WhatsApp Web chats to .txt files. Download your full chat history in bulk, ready for AI, backup or search.">
 <meta name="twitter:image" content="https://whatsapp-chats-downloader.otro.digital/og-image.png">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -347,7 +347,7 @@ code, pre, .mono { font-family: var(--mono); }
     <div class="wrap">
       <p class="eyebrow">What it's for</p>
       <div class="prose">
-        <h2>Years of conversation, in a format anything can read</h2>
+        <h2>Export years of WhatsApp history into a format anything can read</h2>
         <p class="lede" style="margin-top:18px">WhatsApp keeps your messages locked inside its own app. Plain text sets them loose: paste a thread into an AI assistant, search a decade of messages with the tools you already use, or keep a readable archive that outlives any one piece of software.</p>
       </div>
 
@@ -389,12 +389,14 @@ code, pre, .mono { font-family: var(--mono); }
   <section class="band band--tint" id="how">
     <div class="wrap">
       <p class="eyebrow">How it works</p>
-      <div class="prose"><h2>Three steps, then leave it running</h2></div>
+      <div class="prose"><h2>How to export WhatsApp chats in three steps</h2></div>
 
       <figure class="shot">
         <img src="browser.png"
-             alt="The Chat Exporter popup open in Chrome on WhatsApp Web, part-way through exporting seven selected chats, with a progress bar reading three of eight."
-             width="2480" height="1760" loading="lazy" decoding="async">
+             srcset="browser.png 1240w, browser-2x.png 1984w"
+             sizes="(max-width: 1080px) 100vw, 984px"
+             alt="Exporting WhatsApp chats to text files: the Chat Exporter popup open in Chrome on WhatsApp Web, part-way through downloading seven selected conversations."
+             width="1240" height="880" loading="lazy" decoding="async">
         <figcaption>The extension part-way through an export. Chat names are examples, and the page behind the popup is shown as a placeholder.</figcaption>
       </figure>
 
@@ -425,7 +427,7 @@ code, pre, .mono { font-family: var(--mono); }
     <div class="wrap">
       <p class="eyebrow">The output</p>
       <div class="prose">
-        <h2>One readable file per conversation</h2>
+        <h2>One readable .txt file per conversation</h2>
         <p style="margin-top:16px; color:var(--muted)">Every file opens with a header describing what it contains, then one line per message. Dates are reproduced exactly as WhatsApp displayed them &mdash; and the header states which order they're in, so nothing has to guess whether 03/04 means March or April.</p>
       </div>
       <pre class="sample"><span class="t">================================================================
@@ -465,7 +467,7 @@ Chat:</span> Ada Lovelace
     <div class="wrap">
       <p class="eyebrow">Install</p>
       <div class="prose">
-        <h2>Load it in about a minute</h2>
+        <h2>Install the Chrome extension in about a minute</h2>
         <p style="margin-top:16px; color:var(--muted)">Download the latest release from GitHub, then load it as an unpacked extension.</p>
       </div>
       <div class="steps">
@@ -512,7 +514,7 @@ Chat:</span> Ada Lovelace
   <section class="band" id="faq">
     <div class="wrap">
       <p class="eyebrow">Questions</p>
-      <div class="prose"><h2>Frequently asked</h2></div>
+      <div class="prose"><h2>Frequently asked questions</h2></div>
       <div class="faq">
         <details>
           <summary>Is it free?</summary>
@@ -521,6 +523,14 @@ Chat:</span> Ada Lovelace
         <details>
           <summary>Do my messages get uploaded anywhere?</summary>
           <p>No. The extension makes no network requests at all. It reads the conversations already displayed in your browser and writes files to your own Downloads folder. There is no server involved at any point.</p>
+        </details>
+        <details>
+          <summary>Can I export my entire WhatsApp chat history?</summary>
+          <p>Yes. The exporter scrolls back through a conversation, loading older messages until it reaches the beginning, so you get the whole history rather than the most recent screenful. Very long chats take a few minutes each, and you can cap the export by message count or date range if you'd rather not load everything.</p>
+        </details>
+        <details>
+          <summary>How do I back up WhatsApp chats to my computer?</summary>
+          <p>Install the extension, open WhatsApp Web, scan your chat list and pick the conversations you want. Each one is written as a .txt file to your Downloads folder, so the backup lives on your own machine rather than in anyone's cloud.</p>
         </details>
         <details>
           <summary>How is this different from WhatsApp's own export?</summary>
@@ -642,6 +652,8 @@ Chat:</span> Ada Lovelace
       "mainEntity": [
         { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. It's free and open source, with no paid tier, and the full source is on GitHub for anyone to read or modify." } },
         { "@type": "Question", "name": "Do my messages get uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The extension makes no network requests at all. It reads the conversations already displayed in your browser and writes files to your own Downloads folder. There is no server involved at any point." } },
+        { "@type": "Question", "name": "Can I export my entire WhatsApp chat history?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The exporter scrolls back through a conversation, loading older messages until it reaches the beginning, so you get the whole history rather than the most recent screenful. Very long chats take a few minutes each, and you can cap the export by message count or date range if you'd rather not load everything." } },
+        { "@type": "Question", "name": "How do I back up WhatsApp chats to my computer?", "acceptedAnswer": { "@type": "Answer", "text": "Install the extension, open WhatsApp Web, scan your chat list and pick the conversations you want. Each one is written as a .txt file to your Downloads folder, so the backup lives on your own machine rather than in anyone's cloud." } },
         { "@type": "Question", "name": "How is this different from WhatsApp's own export?", "acceptedAnswer": { "@type": "Answer", "text": "WhatsApp can email you one conversation at a time from your phone. This exports many conversations in a single run, straight to files on your computer, in a consistent format with a header describing each file's contents." } },
         { "@type": "Question", "name": "Can I use the exported files with ChatGPT or Claude?", "acceptedAnswer": { "@type": "Answer", "text": "That's what the format is designed for. Each line carries the sender, date and time, so an AI can follow the conversation. There's also an option to write every chat into a single combined file for pasting or uploading in one go." } },
         { "@type": "Question", "name": "Does it export group chats?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. In group conversations each message keeps the name of the person who sent it, exactly as WhatsApp displays it." } },
