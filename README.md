@@ -4,7 +4,8 @@ Export your WhatsApp Web conversations to plain `.txt` files on your own compute
 not just what fits on screen. Formatted so you can hand them straight to an AI.
 
 **[whatsapp-chats-downloader.otro.digital](https://whatsapp-chats-downloader.otro.digital)** ·
-A local-only Chrome (Manifest V3) extension.
+A local-only Chrome (Manifest V3) extension ·
+A free tool by **[OTRO Digital](https://otro.digital)**
 
 WhatsApp keeps your messages locked inside its own app. Plain text sets them loose: paste a thread
 into an AI assistant, search a decade of messages with the tools you already use, or keep a readable
@@ -255,5 +256,12 @@ custom domain.
 
 ---
 
-Built by [OTRO Digital](https://otro.digital). Not affiliated with, endorsed by, or sponsored by
-WhatsApp LLC or Meta Platforms, Inc. "WhatsApp" is a trademark of its respective owner.
+## OTRO Digital
+
+Chat Exporter is a free, open-source tool from **OTRO Digital**.
+
+- [otro.digital](https://otro.digital)
+- [github.com/otrodigital](https://github.com/otrodigital)
+
+Not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc. "WhatsApp"
+is a trademark of its respective owner.

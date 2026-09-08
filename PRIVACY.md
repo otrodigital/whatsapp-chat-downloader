@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**WhatsApp Chat Downloader**
+**WhatsApp Chat Downloader** — a free tool by [OTRO Digital](https://otro.digital)
 Last updated: 7 September 2026
 
 ## Summary
@@ -59,4 +59,7 @@ Any change to this policy will be published in this file alongside the extension
 
 ## Contact
 
-Questions about this policy: open an issue on the extension's source repository.
+This extension is published by **OTRO Digital** — [otro.digital](https://otro.digital).
+
+Questions about this policy, or anything else about the extension: open an issue at
+[github.com/otrodigital/whatsapp-chat-downloader/issues](https://github.com/otrodigital/whatsapp-chat-downloader/issues).

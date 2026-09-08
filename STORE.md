@@ -89,6 +89,9 @@ GOOD TO KNOW
 - Media files are not downloaded, they appear as placeholders, and captions are kept
 - Archived chats are not included
 
+A free tool by OTRO Digital - https://otro.digital
+Source and issues: https://github.com/otrodigital/whatsapp-chat-downloader
+
 Not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc.
 ```
 

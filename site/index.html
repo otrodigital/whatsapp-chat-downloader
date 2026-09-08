@@ -258,10 +258,23 @@ code, pre, .mono { font-family: var(--mono); }
 .faq details > p { padding: 0 0 20px; max-width: 60ch; color: var(--muted); font-size: 15.5px; }
 .faq details > p + p { margin-top: -6px; padding-top: 0; }
 
+/* --- studio band -------------------------------------------------------- */
+.studio { display: grid; grid-template-columns: 1fr auto; gap: clamp(24px, 4vw, 56px); align-items: center; }
+@media (max-width: 720px) { .studio { grid-template-columns: 1fr; } }
+.wordmark {
+  font-family: var(--display); font-size: clamp(30px, 4.2vw, 42px); font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1;
+}
+.wordmark em { font-style: italic; color: var(--green); }
+.studio p.studio-line { margin-top: 14px; max-width: 46ch; color: var(--muted); font-size: 16px; }
+.studio-links { display: flex; flex-wrap: wrap; gap: 12px; }
+
 /* --- footer ------------------------------------------------------------ */
 .foot { border-top: 1px solid var(--line); padding-block: 44px 56px; font-size: 14px; color: var(--muted); }
-.foot-top { display: flex; flex-wrap: wrap; gap: 20px 40px; justify-content: space-between; align-items: baseline; }
-.foot nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.foot-top { display: flex; flex-wrap: wrap; gap: 28px 56px; justify-content: space-between; }
+.foot-cols { display: flex; flex-wrap: wrap; gap: 28px 56px; }
+.foot nav { display: flex; flex-direction: column; gap: 9px; }
+.foot .col-title { margin-bottom: 11px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .11em; text-transform: uppercase; color: var(--muted); }
 .foot a { color: var(--ink); text-decoration: none; }
 .foot a:hover { text-decoration: underline; }
 .foot .fine { margin-top: 28px; max-width: 62ch; font-size: 12.5px; line-height: 1.6; }
@@ -280,6 +293,7 @@ code, pre, .mono { font-family: var(--mono); }
     <a href="#install">Install</a>
     <a href="#faq" class="is-optional">FAQ</a>
     <a href="https://github.com/otrodigital/whatsapp-chat-downloader" rel="noopener">GitHub</a>
+    <a href="https://otro.digital" rel="noopener" class="is-optional">OTRO Digital</a>
   </nav>
 </header>
 
@@ -518,6 +532,19 @@ Chat:</span> Ada Lovelace
       </div>
     </div>
   </section>
+  <section class="band band--tint" id="otro">
+    <div class="wrap studio">
+      <div>
+        <p class="eyebrow">Who made this</p>
+        <p class="wordmark">OTRO <em>Digital</em></p>
+        <p class="studio-line">Chat Exporter is a free, open-source tool from OTRO Digital, released for anyone who wants their conversations back in a format they control.</p>
+      </div>
+      <div class="studio-links">
+        <a class="btn btn--primary" href="https://otro.digital" rel="noopener">Visit otro.digital</a>
+        <a class="btn btn--ghost" href="https://github.com/otrodigital" rel="noopener">More on GitHub</a>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer class="wrap foot">
@@ -527,13 +554,22 @@ Chat:</span> Ada Lovelace
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#0f7c5f"/><path d="M19 5.5H5a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 5 15.5h1.2v3l3.4-3h9.4a1.5 1.5 0 0 0 1.5-1.5V7A1.5 1.5 0 0 0 19 5.5Z" fill="#c6eadb"/></svg>
         Chat Exporter for WhatsApp Web
       </a>
-      <p style="margin-top:10px">Built by <a href="https://otro.digital" rel="noopener">OTRO Digital</a></p>
+      <p style="margin-top:10px">A free tool by <a href="https://otro.digital" rel="noopener">OTRO Digital</a></p>
     </div>
-    <nav>
-      <a href="https://github.com/otrodigital/whatsapp-chat-downloader" rel="noopener">GitHub</a>
-      <a href="https://github.com/otrodigital/whatsapp-chat-downloader/blob/main/PRIVACY.md" rel="noopener">Privacy policy</a>
-      <a href="https://github.com/otrodigital/whatsapp-chat-downloader/issues" rel="noopener">Report an issue</a>
-    </nav>
+    <div class="foot-cols">
+      <nav aria-label="Project links">
+        <span class="col-title">Project</span>
+        <a href="https://github.com/otrodigital/whatsapp-chat-downloader" rel="noopener">Source on GitHub</a>
+        <a href="https://github.com/otrodigital/whatsapp-chat-downloader/releases" rel="noopener">Download</a>
+        <a href="https://github.com/otrodigital/whatsapp-chat-downloader/blob/main/PRIVACY.md" rel="noopener">Privacy policy</a>
+        <a href="https://github.com/otrodigital/whatsapp-chat-downloader/issues" rel="noopener">Report an issue</a>
+      </nav>
+      <nav aria-label="OTRO Digital links">
+        <span class="col-title">OTRO Digital</span>
+        <a href="https://otro.digital" rel="noopener">otro.digital</a>
+        <a href="https://github.com/otrodigital" rel="noopener">GitHub</a>
+      </nav>
+    </div>
   </div>
   <p class="fine">Not affiliated with, endorsed by, or sponsored by WhatsApp LLC or Meta Platforms, Inc. "WhatsApp" is a trademark of its respective owner. Export only conversations you are a party to, and remember that exported files are plain, unencrypted text on your disk.</p>
 </footer>
@@ -571,7 +607,8 @@ Chat:</span> Ada Lovelace
       "@type": "Organization",
       "@id": "https://otro.digital/#organization",
       "name": "OTRO Digital",
-      "url": "https://otro.digital"
+      "url": "https://otro.digital",
+      "sameAs": ["https://github.com/otrodigital"]
     },
     {
       "@type": "WebSite",

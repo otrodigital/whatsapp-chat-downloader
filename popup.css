@@ -70,3 +70,8 @@ h1 { margin: 0; font-size: 22px; line-height: 1; font-weight: 500; }
 .log-warn { color: #9a6b1f; }
 .log-error { color: #a84736; }
 .footnote code { font: 11px 'SF Mono', Menlo, monospace; color: var(--green-dark); }
+
+/* --- brand line --------------------------------------------------------- */
+.brandline { margin: 14px 0 0; padding-top: 13px; border-top: 1px solid var(--line); font: 11px Arial, sans-serif; color: var(--muted); }
+.brandline a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
+.brandline a:hover { text-decoration: underline; }
